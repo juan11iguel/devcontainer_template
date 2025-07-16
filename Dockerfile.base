@@ -2,13 +2,14 @@
 # This is a common practice in Dockerfiles for creating a container that runs indefinitely without executing any commands.
 # The purpose of this is to keep the container running so that it can be used as a base image or as a placeholder for other services.
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 # MATLAB
 # FROM containers.mathworks.com/matlab-runtime:r2024b
 
 # Environment variables
 ENV WORKDIR=${WORKDIR:-/workspaces/devcontainer_template}
-# MATLAB
+
+# Environment variables. MATLAB
 # ENV DEBIAN_FRONTEND=noninteractive
 # ENV MATLAB_VERSION=R2024b
 # ENV AGREE_TO_MATLAB_RUNTIME_LICENSE=yes
@@ -20,7 +21,10 @@ ENV WORKDIR=${WORKDIR:-/workspaces/devcontainer_template}
 # $MR/sys/os/glnxa64:\
 # $MR/sys/opengl/lib/glnxa64
 
-WORKDIR ${WORKDIR}
+# Environment variables. uv
+ENV UV_PROJECT_ENVIRONMENT=/venvs
+
+WORKDIR $WORKDIR
 
 # Install necessary packages
 RUN apt-get update && apt-get install -y \
@@ -62,3 +66,7 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
 # RUN rm /miniconda3/miniconda.sh
 # Add Miniconda to the PATH
 # ENV PATH="/miniconda3/bin:$PATH"
+
+# Set up virtual environment
+# COPY ./README.md ./pyproject.toml ./uv.lock* $WORKDIR
+# RUN uv sync
